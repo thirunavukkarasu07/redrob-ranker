@@ -1,0 +1,10 @@
+@'
+data/*.jsonl
+data/*.gz
+artifacts/
+*.npy
+*.pkl
+__pycache__/
+.venv/
+/submission.csv
+'@ | Out-File -Encoding utf8 .gitignore

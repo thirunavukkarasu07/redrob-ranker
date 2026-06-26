@@ -1,0 +1,116 @@
+candidate_id,final_tier,reason
+CAND_0040853,0,honeypot (impossible tenure)
+CAND_0038431,0,honeypot
+CAND_0037539,0,honeypot
+CAND_0065710,0,honeypot
+CAND_0007413,0,honeypot
+CAND_0035104,0,honeypot
+CAND_0093364,0,honeypot
+CAND_0065787,0,honeypot
+CAND_0096150,0,honeypot
+CAND_0010294,0,honeypot
+CAND_0009080,0,honeypot (content writer)
+CAND_0070863,1,keyword stuffer - business analyst w/ AI skills
+CAND_0030320,1,keyword stuffer - graphic designer
+CAND_0005248,1,keyword stuffer - civil engineer
+CAND_0098578,1,keyword stuffer - project manager
+CAND_0053749,1,keyword stuffer - graphic designer
+CAND_0064413,1,keyword stuffer - operations manager
+CAND_0005518,1,keyword stuffer - civil engineer
+CAND_0055999,1,keyword stuffer - mechanical engineer
+CAND_0023237,1,keyword stuffer - operations manager
+CAND_0099211,1,keyword stuffer - operations manager
+CAND_0014968,1,keyword stuffer - hr manager
+CAND_0050483,1,keyword stuffer - business analyst
+CAND_0047396,1,keyword stuffer - project manager
+CAND_0056815,1,keyword stuffer - hr manager
+CAND_0003791,3,generic ML at product but USA (geography) + low retrieval relevance
+CAND_0087630,5,ideal - AI eng EdTech recsys 7.2y India active
+CAND_0052335,4,strong recsys 6.4y active but Germany (no visa)
+CAND_0070485,5,ideal - search engineer retrieval India 6.4y active
+CAND_0024466,4,strong search engineer but Canada (no visa)
+CAND_0078508,4,applied AI product in-band active
+CAND_0092706,4,product in-band strong signals
+CAND_0058575,5,ideal - AI eng recsys AI/ML 5.8y India active
+CAND_0011687,5,ideal - Sr NLP search/retrieval/ranking 7.8y India active responsive
+CAND_0076163,5,NLP recsys 6.9y India strong signals
+CAND_0015493,4,data scientist product 6.4y active
+CAND_0093958,4,ML product 5.9y in-band active
+CAND_0047907,4,AI product 6.6y in-band active
+CAND_0057563,5,ideal - NLP recsys 6.8y India active
+CAND_0001651,4,data scientist product 6.5y active
+CAND_0074339,4,ML product 5.3y in-band active
+CAND_0078002,5,ideal - ML eng recsys Internet 6.3y active responsive
+CAND_0046526,3,generic ML in-band but Singapore (geography)
+CAND_0051466,4,AI product 5.3y in-band active
+CAND_0010685,5,ideal - NLP recsys 6.7y India active responsive
+CAND_0077504,2,services-only career (IT Services) + junior
+CAND_0015478,2,services + junior (3.6y)
+CAND_0058791,2,services + junior
+CAND_0068393,2,services + junior
+CAND_0040099,2,services + junior
+CAND_0011707,2,services + junior
+CAND_0090584,3,services in career but product role 5.1y
+CAND_0045141,3,services in-band 5.3y
+CAND_0046459,2,services + junior
+CAND_0014234,3,services in-band 5.4y
+CAND_0041611,2,DEAD account - perfect search/retrieval profile but resp 0.07 inactive 180 + USA
+CAND_0094759,2,DEAD account - rebuilt candidate-JD matching but resp 0.11 inactive 144
+CAND_0060072,2,DEAD account - search/retrieval but resp 0.10 inactive 128
+CAND_0007411,2,DEAD account - search/retrieval but resp 0.12 inactive 181
+CAND_0092278,2,DEAD account - RAG/search but resp 0.07 inactive 206
+CAND_0046924,2,computer vision (JD-negative) + services
+CAND_0058783,1,computer vision + junior + services
+CAND_0014909,2,computer vision (JD-negative)
+CAND_0026716,2,computer vision (JD-negative)
+CAND_0055004,1,computer vision + junior
+CAND_0084760,1,computer vision + junior
+CAND_0045613,2,computer vision + services
+CAND_0096589,1,computer vision + junior
+CAND_0049831,1,computer vision + USA
+CAND_0022127,2,computer vision (JD-negative)
+CAND_0080344,4,SWE-ML hidden gem product 4.9y active strong signals
+CAND_0087744,2,SWE-ML but junior + services
+CAND_0013002,2,SWE-ML but services + USA
+CAND_0046278,3,SWE-ML product near-band active
+CAND_0071205,2,SWE-ML junior + USA
+CAND_0066713,3,SWE-ML in-band but services in career
+CAND_0014683,4,SWE-ML product 5.6y active
+CAND_0067866,3,SWE-ML in-band but services
+CAND_0064331,3,SWE-ML junior product
+CAND_0049978,4,SWE-ML product 6.6y in-band
+CAND_0052744,4,SWE-ML product 4.9y active responsive
+CAND_0025882,3,SWE-ML in-band but services
+CAND_0052030,2,SWE-ML junior + services
+CAND_0043676,3,SWE-ML in-band but services
+CAND_0059795,4,SWE-ML product 5.6y active
+CAND_0068497,0,non-tech accountant
+CAND_0013924,0,non-tech hr manager
+CAND_0032008,0,non-tech operations manager
+CAND_0076742,0,non-tech sales executive
+CAND_0076680,0,non-tech hr manager
+CAND_0026696,0,non-tech accountant
+CAND_0016806,0,non-tech graphic designer
+CAND_0097074,0,non-tech project manager
+CAND_0000732,0,non-tech project manager
+CAND_0042335,0,non-tech operations manager
+CAND_0040050,1,plain devops no ML + services
+CAND_0018599,1,plain java dev no ML + services
+CAND_0013308,2,data/analytics eng moving toward ML (adjacent)
+CAND_0084271,1,junior full-stack no ML
+CAND_0050999,1,plain .net backend no ML
+CAND_0074626,2,data eng supports ML pipelines (adjacent)
+CAND_0022494,1,plain .net backend no ML
+CAND_0049830,1,QA engineer no ML
+CAND_0048413,2,analytics eng supports ML (adjacent)
+CAND_0071424,1,plain full-stack no ML + USA
+CAND_0049340,3,junior ML product active
+CAND_0011643,3,junior AI product active responsive
+CAND_0006354,2,junior + services
+CAND_0082314,3,junior ML product active
+CAND_0016659,3,junior ML product active responsive
+CAND_0061177,2,junior + weak signals (resp 0.25)
+CAND_0023076,3,junior AI product active
+CAND_0037417,3,junior data scientist product
+CAND_0046095,3,junior ML product active
+CAND_0039754,4,strong active search/retrieval but 16.2y (over-band) + applied-scientist tilt
