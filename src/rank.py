@@ -4,6 +4,7 @@ from pathlib import Path
 from explore import load_raw
 from features import compute_features, days_inactive
 from score import score_features
+from semantic import load_semantic
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -19,12 +20,14 @@ def reasoning(rec, f):
 if __name__ == "__main__":
     t0 = time.time()
     raw = load_raw()
+    sem_map = load_semantic()
     print(f"loaded {len(raw):,} in {time.time()-t0:.1f}s")
 
     t1 = time.time()
     rows = []
     for r in raw:
         f = compute_features(r)
+        f["sem"] = sem_map.get(r["candidate_id"], 0.0)
         rows.append({"candidate_id": r["candidate_id"], "score": score_features(f),
                      "title": r["profile"]["current_title"], "yoe": r["profile"]["years_of_experience"],
                      "country": r["profile"]["country"], "honeypot": f["honeypot"],
