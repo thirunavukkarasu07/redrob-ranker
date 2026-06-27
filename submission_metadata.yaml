@@ -13,7 +13,7 @@ primary_contact:
 # Code and reproducibility
 # ============================================================================
 github_repo: "https://github.com/thirunavukkarasu07/redrob-ranker"                     # <-- e.g. https://github.com/<you>/redrob-ranker
-sandbox_link: "FILL_ME"                    # <-- HuggingFace Space / Streamlit / Colab link
+sandbox_link: "https://huggingface.co/spaces/thir07/redrob-ranker"                    # <-- HuggingFace Space / Streamlit / Colab link
 
 reproduce_command: "python src/rank.py --candidates ./candidates.jsonl --out ./submission.csv"
 
