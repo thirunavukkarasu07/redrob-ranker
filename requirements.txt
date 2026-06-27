@@ -1,0 +1,11 @@
+# ---- ranking step (src/rank.py) needs ONLY these (CPU, no network) ----
+numpy==2.1.3
+pandas==2.3.3
+orjson==3.11.8
+
+# ---- offline embedding pre-computation (src/embed.py, src/anchors.py) ----
+# Not needed at ranking time; used once to build artifacts/emb.npy + anchor vectors.
+sentence-transformers==5.1.1
+torch==2.8.0
+transformers==5.12.1
+tokenizers==0.22.1

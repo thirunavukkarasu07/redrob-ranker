@@ -1,0 +1,73 @@
+# Redrob Hackathon — Submission Metadata
+
+team_name: "Team Thiru"                       # <-- your registered team/participant name
+
+primary_contact:
+  name: "Thirunavukkarasu Meenakshisundaram"
+  email: "thiru07122006@gmail.com"
+  phone: "7010117566"                         # <-- used for top-50/top-10 outreach
+
+
+
+# ============================================================================
+# Code and reproducibility
+# ============================================================================
+github_repo: "https://github.com/thirunavukkarasu07/redrob-ranker"                     # <-- e.g. https://github.com/<you>/redrob-ranker
+sandbox_link: "FILL_ME"                    # <-- HuggingFace Space / Streamlit / Colab link
+
+reproduce_command: "python src/rank.py --candidates ./candidates.jsonl --out ./submission.csv"
+
+# ============================================================================
+# Compute environment
+# ============================================================================
+compute:
+  platform: "Local Windows 11 machine"
+  cpu_cores: 24                          # <-- adjust if different
+  ram_gb: 32                             # <-- adjust if different
+  python_version: "3.13.14"
+  os: "Windows 11"
+  uses_gpu_for_inference: false            # ranking is CPU-only numpy; embeddings precomputed on CPU
+  has_network_during_ranking: false        # ranking loads cached .npy; no API calls
+  pre_computation_required: true           # offline sentence-embeddings, cached to artifacts/
+  pre_computation_time_minutes: 46
+
+# ============================================================================
+# AI tools declaration (honest; not penalized)
+# ============================================================================
+ai_tools_used:
+  - "Claude"
+
+ai_usage_summary: |
+  Used Claude (Anthropic) for architecture discussion, code review, and step-by-step
+  pair-programming. All data analysis, the honeypot/keyword-stuffer/trap calibration, the
+  hand-labelled gold set, and every scoring-design decision were directed and verified by the
+  author. No candidate data is sent to any hosted LLM during ranking — the ranking step makes
+  no network calls.
+
+# ============================================================================
+# Approach summary
+# ============================================================================
+methodology_summary: |
+  Hybrid ranker. The dataset's skills[] array is randomized noise (every skill ~12k occurrences),
+  so the ranker ignores keyword-stuffing and reasons about title, career-history prose, and
+  behaviour. Score = 0.50*content + 0.25*career-keyword + 0.25*experience-fit, multiplied by
+  services-firm, geography, and a behavioural-availability modifier; honeypots are hard-zeroed.
+  "content" = max(title_relevance, semantic_fit), where semantic_fit is a CONTRASTIVE
+  sentence-embedding score (similarity to retrieval/ranking/recsys anchors minus similarity to
+  computer-vision/speech/non-tech/services/research anchors). The contrast is what lets embeddings
+  rescue plain-language Tier-5s (real builders with understated titles) without dragging in
+  computer-vision look-alikes. Honeypots are detected by internal consistency only (years of
+  experience contradicting career span or skill durations; a current role lasting longer than time
+  since it started). Validated on a hand-labelled 115-candidate gold set (NDCG@10/@50, MAP, P@10).
+  Ranking runs in ~7 s on CPU for 100K candidates with no network; embeddings are precomputed
+  offline and cached.
+
+# ============================================================================
+# Declarations
+# ============================================================================
+declarations:
+  read_submission_spec: true
+  code_is_original_work: true
+  no_collusion: true
+  honeypot_check_done: true
+  reproduction_tested: true

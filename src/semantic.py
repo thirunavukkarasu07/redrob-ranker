@@ -11,7 +11,12 @@ def _raw():
     return ids, (emb @ pos.T).max(1) - (emb @ neg.T).max(1)
 
 def load_semantic():
-    ids, c = _raw()
+    try:
+        ids, c = _raw()
+    except FileNotFoundError:
+        print("[warn] embeddings not found — run embed.py + anchors.py for the hybrid. "
+              "Falling back to rule-only ranking (sem=0).")
+        return {}
     hi = np.percentile(c, 99.5)
     return dict(zip(ids, np.clip(c / (hi + 1e-9), 0, 1)))
 
