@@ -5,7 +5,7 @@ orjson==3.11.8
 
 # ---- offline embedding pre-computation (src/embed.py, src/anchors.py) ----
 # Not needed at ranking time; used once to build artifacts/emb.npy + anchor vectors.
+# (transformers/tokenizers are intentionally unpinned — sentence-transformers resolves a
+#  compatible transformers<5.0.0 itself; pinning them creates a dependency conflict.)
 sentence-transformers==5.1.1
 torch==2.8.0
-transformers==5.12.1
-tokenizers==0.22.1
