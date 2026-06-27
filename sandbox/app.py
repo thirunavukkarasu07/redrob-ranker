@@ -1,19 +1,17 @@
 """
-Redrob Hybrid Ranker — sandbox demo (HuggingFace Spaces).
+Redrob Hybrid Ranker — sandbox demo (Streamlit, HuggingFace Docker Space).
 
 Upload a small candidates JSONL/JSON sample (<=100) and the app runs the SAME ranking
 logic as the full submission: structured features + contrastive sentence-embeddings
 (rescue) + internal-consistency honeypot zeroing + multiplicative behavioural modifier.
 Embeddings are computed on the fly for the small sample (the full pipeline precomputes
-and caches them). CPU only, no network calls beyond the one-time model download.
+and caches them). CPU only.
 """
 import json
-import os
-import tempfile
 from datetime import date
 import numpy as np
 import pandas as pd
-import gradio as gr
+import streamlit as st
 
 REF = date(2026, 6, 1)
 W_CONTENT, W_CAREER, W_EXP = 0.50, 0.25, 0.25
@@ -42,16 +40,14 @@ NEG = [
     "Academic researcher publishing machine learning papers without production deployment to real users.",
 ]
 
-try:
+
+@st.cache_resource
+def load_model():
     from sentence_transformers import SentenceTransformer
-    print("loading bge-small-en-v1.5 ...")
-    MODEL = SentenceTransformer("BAAI/bge-small-en-v1.5"); MODEL.max_seq_length = 256
-    POS_EMB = MODEL.encode([PFX + t for t in POS], normalize_embeddings=True)
-    NEG_EMB = MODEL.encode([PFX + t for t in NEG], normalize_embeddings=True)
-    EMBED_OK = True
-except Exception as e:
-    print(f"[warn] embeddings unavailable ({e}); running rule-only (sem=0).")
-    EMBED_OK = False
+    m = SentenceTransformer("BAAI/bge-small-en-v1.5"); m.max_seq_length = 256
+    pos = m.encode([PFX + t for t in POS], normalize_embeddings=True)
+    neg = m.encode([PFX + t for t in NEG], normalize_embeddings=True)
+    return m, pos, neg
 
 
 # ---------- features (identical to src/features.py) ----------
@@ -167,57 +163,56 @@ def parse(content):
     return [json.loads(ln) for ln in content.splitlines() if ln.strip()]
 
 
-def rank(file):
-    if file is None:
-        return pd.DataFrame(), None
-    with open(file.name, "r", encoding="utf-8") as f:
-        recs = parse(f.read())
+def rank_recs(recs, model, pos_emb, neg_emb):
     recs = recs[:100]
     texts = [doc_text(r) for r in recs]
-    if EMBED_OK:
-        doc_emb = MODEL.encode(texts, normalize_embeddings=True)
-        contrast = (doc_emb @ POS_EMB.T).max(1) - (doc_emb @ NEG_EMB.T).max(1)
-        sem_all = np.clip(contrast / SEM_DIV, 0, 1)
-    else:
-        sem_all = np.zeros(len(recs))
-
+    doc_emb = model.encode(texts, normalize_embeddings=True)
+    contrast = (doc_emb @ pos_emb.T).max(1) - (doc_emb @ neg_emb.T).max(1)
+    sem_all = np.clip(contrast / SEM_DIV, 0, 1)
     rows = []
     for r, sem in zip(recs, sem_all):
+        cr = career_relevance(r); svc = services_factor(r)
         if is_honeypot(r):
             score = 0.0
         else:
-            cr = career_relevance(r); svc = services_factor(r)
             content = max(title_relevance(r["profile"]["current_title"]), float(sem))
             base = W_CONTENT * content + W_CAREER * cr + W_EXP * experience_fit(r["profile"]["years_of_experience"])
             score = base * svc * geography(r) * behavioral_modifier(r)
-        cr = career_relevance(r); svc = services_factor(r)
         rows.append({"candidate_id": r["candidate_id"], "title": r["profile"]["current_title"],
-                     "score": round(float(score), 4),
-                     "reasoning": reasoning(r, float(sem), cr, svc)})
+                     "score": round(float(score), 4), "reasoning": reasoning(r, float(sem), cr, svc)})
     df = pd.DataFrame(rows).sort_values(["score", "candidate_id"], ascending=[False, True]).reset_index(drop=True)
     df.insert(0, "rank", range(1, len(df) + 1))
-    out = os.path.join(tempfile.gettempdir(), "ranked_sample.csv")
-    df[["candidate_id", "rank", "score", "reasoning"]].to_csv(out, index=False)
-    return df, out
+    return df
 
 
-with gr.Blocks(title="Redrob Hybrid Ranker") as demo:
-    gr.Markdown(
-        "# Redrob Hybrid Candidate Ranker — sandbox\n"
-        "Upload a small candidates sample (`.jsonl` or `.json`, ≤100) for the *Senior AI Engineer* JD. "
-        "Runs the **full hybrid** live: structured features (title / career-prose / experience / "
-        "product-vs-services / geography) + **contrastive sentence-embeddings** (retrieval/ranking "
-        "anchors minus CV/speech/non-tech/services/research anchors, used as a rescue signal) + "
-        "**internal-consistency honeypot zeroing** + a **behavioural availability modifier**, with "
-        "fact-grounded reasoning. Honeypots score 0; keyword-stuffers and inactive 'ghosts' are "
-        "down-weighted; plain-language builders are rescued by embeddings. (Embeddings are computed "
-        "on the fly for the small sample; the full 100K pipeline precomputes and caches them.)"
-    )
-    inp = gr.File(label="candidates sample (.jsonl / .json)", file_types=[".jsonl", ".json"])
-    btn = gr.Button("Rank", variant="primary")
-    out_df = gr.Dataframe(label="Ranked candidates", wrap=True)
-    out_file = gr.File(label="Download ranked CSV")
-    btn.click(rank, inputs=inp, outputs=[out_df, out_file])
+st.set_page_config(page_title="Redrob Hybrid Ranker", page_icon="🎯", layout="wide")
+st.title("🎯 Redrob Hybrid Candidate Ranker — sandbox")
+st.markdown(
+    "Upload a small candidates sample (`.jsonl` or `.json`, ≤100) for the **Senior AI Engineer** JD. "
+    "Runs the **full hybrid** live: structured features (title / career-prose / experience / "
+    "product-vs-services / geography) + **contrastive sentence-embeddings** (retrieval/ranking anchors "
+    "minus CV/speech/non-tech/services/research anchors, used as a *rescue* signal) + "
+    "**internal-consistency honeypot zeroing** + a **behavioural availability modifier**, with "
+    "fact-grounded reasoning. Honeypots score 0; keyword-stuffers and inactive 'ghosts' are "
+    "down-weighted; plain-language builders are rescued by embeddings."
+)
 
-if __name__ == "__main__":
-    demo.launch(server_name="0.0.0.0", server_port=7860)
+with st.spinner("loading bge-small-en-v1.5 (first run downloads the model)…"):
+    model, pos_emb, neg_emb = load_model()
+
+uploaded = st.file_uploader("candidates sample (.jsonl / .json)", type=["jsonl", "json"])
+if uploaded is not None:
+    try:
+        recs = parse(uploaded.read().decode("utf-8"))
+    except Exception as e:
+        st.error(f"Could not parse file: {e}")
+    else:
+        with st.spinner(f"ranking {min(len(recs), 100)} candidates…"):
+            df = rank_recs(recs, model, pos_emb, neg_emb)
+        st.success(f"Ranked {len(df)} candidates.")
+        st.dataframe(df, use_container_width=True, hide_index=True)
+        st.download_button("⬇️ Download ranked CSV",
+                           df[["candidate_id", "rank", "score", "reasoning"]].to_csv(index=False),
+                           file_name="ranked_sample.csv", mime="text/csv")
+else:
+    st.info("Upload a candidates sample to rank. Tip: use the bundle's `sample_candidates.json`.")
